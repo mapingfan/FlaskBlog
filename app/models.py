@@ -60,3 +60,19 @@ class User(UserMixin, db.Model):
 @login_manager.user_loader
 def user_loader(user_id):
     return User.query.get(int(user_id))
+
+
+def generate_token(expiration=3600):
+    s = Serializer(current_app.config['SECRET_KEY'], expiration)
+    return s.dumps({"confirm": current_app.config['SECRET_KEY']})
+
+
+def confirm_token(token):
+    s = Serializer(current_app.config['SECRET_KEY'])
+    try:
+        data = s.loads(token)
+    except:
+        return False
+    if data.get('confirm') != current_app.config['SECRET_KEY'] :
+        return False
+    return True

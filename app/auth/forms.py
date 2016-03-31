@@ -12,9 +12,10 @@ class LoginForm(Form):
 
 class RegisterForm(Form):
     email = StringField('Email', validators=[Required(), Length(1, 64), Email()])
-    username = StringField('Username', validators=[Required(), Length(1, 64), Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
-                                                                        'Usernames must have only letters, '
-                                                                        'numbers, dots or underscores')])
+    username = StringField('Username', validators=[Required(), Length(1, 64),
+                                                Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
+                                                'Usernames must have only letters, '
+                                                'numbers, dots or underscores')])
     password = PasswordField('Password', validators=[Required(), EqualTo('password2', message='password must math')])
     password2 = PasswordField('Confirm password', validators=[Required()])
     submit = SubmitField('Register')
@@ -38,5 +39,18 @@ class ChangerPasswordForm(Form):
     submit = SubmitField('Change Password')
 
 
+class BeforeResetPasswordForm(Form):
+    username = StringField('Username', validators=[Required(), Length(1, 64),
+                                                   Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
+                                                          'Usernames must have only letters, '
+                                                          'numbers, dots or underscores')])
+    email = StringField('Email', validators=[Required(), Length(1, 64), Email()])
+    confirm = SubmitField("Confirm")
+
+
+
+class ResetPasswordForm(Form):
+    newpassword = PasswordField('New Password', validators=[Required()])
+    confirm = SubmitField("Confirm")
 
 

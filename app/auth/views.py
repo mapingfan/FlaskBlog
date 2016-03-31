@@ -1,13 +1,13 @@
 from flask import render_template, url_for, redirect, flash, request
 from . import auth
 from flask_login import login_user, logout_user, login_required
-from ..models import User
+from ..models import User, generate_token, confirm_token
 from .forms import LoginForm, RegisterForm
 from app import db
 from flask_login import current_user
 from ..email import send_email
-from  .forms import ChangerPasswordForm
-
+from  .forms import ChangerPasswordForm, ResetPasswordForm, BeforeResetPasswordForm
+from flask import abort
 
 @auth.before_app_request
 def before_request():
@@ -91,3 +91,30 @@ def change_password():
             db.session.commit()
             return redirect(url_for('auth.login'))
     return render_template('changepassword.html', form=form)
+
+
+@auth.route('/reset-password/<token>', methods=["POST", "GET"])
+def reset_password(token):
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        if confirm_token(token):
+            temp_user = User.query.filter_by(email=form.email.data).first()
+            temp_user.password = form.newpassword.data
+            db.session.add(temp_user)
+            db.session.commit()
+            return redirect(url_for("auth.login"))
+        else:
+            abort(404)
+    return render_template('resetpassword.html', form=form)
+
+
+@auth.route('/reset', methods=["POST", "GET"])
+def reset():
+    form = BeforeResetPasswordForm()
+    if form.validate_on_submit():
+        token = generate_token()
+        send_email(form.email.data, 'Reset Your Password', 'reset', user=form.username.data, token=token)
+        flash('A confirmation has been sent to you by email .')
+        return redirect(url_for('main.index'))
+    return render_template('beforeresetpassword.html', form=form)
+
