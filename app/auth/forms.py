@@ -54,3 +54,11 @@ class ResetPasswordForm(Form):
     confirm = SubmitField("Confirm")
 
 
+class ChangeMailAddrForm(Form):
+    email2 = StringField('Email', validators=[Required(), Length(1, 64), Email()])
+    confirm = SubmitField('Confirm')
+
+
+class NewMailForm(Form):
+    email = StringField('Email', validators=[Required(), Length(1, 64), Email()])
+    confirm = SubmitField('Confirm')

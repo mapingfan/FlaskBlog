@@ -23,6 +23,7 @@ data-toggle="collapse" data-target=".navbar-collapse">
     <li><a href="{{ url_for('auth.logout') }}">Sign Out</a></li>
     <li><a href="{{ url_for('auth.register') }}">Account Register</a> </li>
     <li><a href="{{ url_for('auth.change_password') }}">Change Password</a> </li>
+    <li><a href="{{ url_for('auth.change_mail_addr') }}">Change Email</a></li>
 {% else %}
     <li><a href="{{ url_for('auth.login') }}">Sign In</a></li>
     <li><a href="{{ url_for('auth.register') }}">Account Register</a> </li>

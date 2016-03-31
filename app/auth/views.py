@@ -6,7 +6,7 @@ from .forms import LoginForm, RegisterForm
 from app import db
 from flask_login import current_user
 from ..email import send_email
-from  .forms import ChangerPasswordForm, ResetPasswordForm, BeforeResetPasswordForm
+from  .forms import ChangerPasswordForm, ResetPasswordForm, BeforeResetPasswordForm, ChangeMailAddrForm, NewMailForm
 from flask import abort
 
 @auth.before_app_request
@@ -117,4 +117,31 @@ def reset():
         flash('A confirmation has been sent to you by email .')
         return redirect(url_for('main.index'))
     return render_template('beforeresetpassword.html', form=form)
+
+
+@auth.route('/changemailaddr', methods=["POST", "GET"])
+@login_required
+def change_mail_addr():
+    form = ChangeMailAddrForm()
+    if form.validate_on_submit():
+        token = generate_token()
+        send_email(form.email2.data, 'Reset Your Password', 'change', user=current_user.username, token=token)
+        flash('A confirmation has been sent to you by email .')
+        return redirect(url_for('main.index'))
+    return render_template('changemailaddr.html', form=form)
+
+
+@auth.route('/changemailaddr/<token>', methods=["POST", "GET"])
+@login_required
+def change(token):
+    form = NewMailForm()
+    if form.validate_on_submit():
+        if confirm_token(token):
+            current_user.email = form.email.data
+            db.session.add(current_user)
+            db.session.commit()
+            return redirect(url_for('auth.login'))
+    return render_template('newmail.html', form=form)
+
+
 
