@@ -85,7 +85,7 @@ def resend_confirmation():
 def change_password():
     form = ChangerPasswordForm()
     if form.validate_on_submit():
-        if current_user.is_authenticated and current_user.confirmed:
+        if current_user.is_authenticated and current_user.confirmed and current_user.verify_password(form.oldpassword.data) :
             current_user.password = form.newpassword.data
             db.session.add(current_user)
             db.session.commit()
