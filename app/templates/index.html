@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}Flasky{% endblock %}
+{% block page_content %}
+<div class="page-header">
+<span style="font-size: 25px ">Hello</span>
+{% if current_user.is_authenticated %}
+<span style="font-size: 25px">{{ current_user.username }}</span>
+{% else %}
+<span style="font-size :25px">Stranger !</span>
+{% endif %}
+</div>
+{% endblock %}
