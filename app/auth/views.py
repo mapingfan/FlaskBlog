@@ -6,6 +6,7 @@ from .forms import LoginForm, RegisterForm
 from app import db
 from flask_login import current_user
 from ..email import send_email
+from  .forms import ChangerPasswordForm
 
 
 @auth.before_app_request
@@ -19,7 +20,6 @@ def unconfirmed():
     if current_user.is_anonymous or current_user.confirmed:
         return redirect(url_for('main.index'))
     return render_template('auth/unconfirmed.html')
-
 
 
 @auth.route('/login', methods=['POST', 'GET'])
@@ -78,3 +78,16 @@ def resend_confirmation():
     send_email(current_user.email, 'Confirm Your Account', 'confirm', user=current_user, token=token)
     flash('A new confirmation has been sent to you by email .')
     return redirect(url_for('main.index'))
+
+
+@auth.route('/change-password', methods=["POST", "GET"])
+@login_required
+def change_password():
+    form = ChangerPasswordForm()
+    if form.validate_on_submit():
+        if current_user.is_authenticated and current_user.confirmed:
+            current_user.password = form.newpassword.data
+            db.session.add(current_user)
+            db.session.commit()
+            return redirect(url_for('auth.login'))
+    return render_template('changepassword.html', form=form)

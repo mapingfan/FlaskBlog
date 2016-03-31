@@ -29,4 +29,14 @@ class RegisterForm(Form):
             raise ValidationError('Username already in use')
 
 
+class ChangerPasswordForm(Form):
+    oldpassword = PasswordField('Old Password', validators=[Required()])
+    newpassword = PasswordField('New Password', validators=[Required()])
+    newpassword2 = PasswordField('Confirm new Password', validators=[Required(),
+                                                                     EqualTo('newpassword',
+                                                                      'password must math')])
+    submit = SubmitField('Change Password')
+
+
+
 
