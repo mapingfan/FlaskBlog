@@ -45,7 +45,6 @@ class User(UserMixin, db.Model):
     def password(self):
         raise AttributeError('password is not a readable attribute')
 
-
     @password.setter
     def password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -73,6 +72,6 @@ def confirm_token(token):
         data = s.loads(token)
     except:
         return False
-    if data.get('confirm') != current_app.config['SECRET_KEY'] :
+    if data.get('confirm') != current_app.config['SECRET_KEY']:
         return False
     return True
