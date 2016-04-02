@@ -21,14 +21,13 @@ class RegisterForm(Form):
     password2 = PasswordField('Confirm password', validators=[Required()])
     submit = SubmitField('Register')
 
-    @staticmethod
-    def validate_email(field):
+
+    def validate_email(self, field):
         email = User.query.filter_by(email=field.data).first()
         if email is not None:
             raise ValidationError('Email already registered .')
 
-    @staticmethod
-    def validate_username(field):
+    def validate_username(self, field):
         if User.query.filter_by(username=field.data).first():
             raise ValidationError('Username already in use')
 
@@ -54,10 +53,10 @@ class ResetPasswordForm(Form):
 
 
 class ChangeMailAddrForm(Form):
-    email2 = StringField('Email', validators=[Required(), Length(1, 64), Email()])
+    email2 = StringField('Your New Email', validators=[Required(), Length(1, 64), Email()])
     confirm = SubmitField('Confirm')
 
 
 class NewMailForm(Form):
-    email = StringField('Email', validators=[Required(), Length(1, 64), Email()])
+    email = StringField('Input your new email', validators=[Required(), Length(1, 64), Email()])
     confirm = SubmitField('Confirm')

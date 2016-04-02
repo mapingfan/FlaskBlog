@@ -55,8 +55,8 @@ def register():
         token = user.generate_confirmation_token()
         send_email(user.email, 'Confirm Your Account',
                    'confirm', user=user, token=token)
-        flash('A confirmation email has been sent to you by email.')
-        return redirect(url_for('main.index'))
+        flash('A confirmation email has been sent to you by email. Please check this email in your inbox .')
+        return redirect(url_for('auth.login'))
     return render_template('auth/register.html', form=form)
 
 
@@ -86,11 +86,14 @@ def resend_confirmation():
 def change_password():
     form = ChangerPasswordForm()
     if form.validate_on_submit():
-        if current_user.is_authenticated and current_user.confirmed and current_user.verify_password(form.oldpassword.data) :
+        if current_user.is_authenticated and current_user.confirmed and current_user.verify_password(form.oldpassword.data):
             current_user.password = form.newpassword.data
             db.session.add(current_user)
             db.session.commit()
+            flash('You have successfully changed your password. Please try to login again .')
             return redirect(url_for('auth.login'))
+        else:
+            flash("Something may be wrong . Please check you password and try again . ")
     return render_template('changepassword.html', form=form)
 
 
@@ -126,7 +129,7 @@ def change_mail_addr():
     form = ChangeMailAddrForm()
     if form.validate_on_submit():
         token = generate_token()
-        send_email(form.email2.data, 'Reset Your Password', 'change', user=current_user.username, token=token)
+        send_email(form.email2.data, 'Change your email account ', 'change', user=current_user.username, token=token)
         flash('A confirmation has been sent to you by email .')
         return redirect(url_for('main.index'))
     return render_template('changemailaddr.html', form=form)
@@ -141,6 +144,7 @@ def change(token):
             current_user.email = form.email.data
             db.session.add(current_user)
             db.session.commit()
+            flash('You have successfully changed you email account, now you can log in using your new email account .')
             return redirect(url_for('auth.login'))
     return render_template('newmail.html', form=form)
 
