@@ -8,7 +8,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     FLASKY_MAIL_SUBJECTIVE_PREFIX = '[Flasky]'
     FLASKY_MAIL_SENDER = '805510335@qq.com'
-    FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN') or 'Max'
+    FLASKY_ADMIN = 'mapingfan@gmail.com'
 
     @staticmethod
     def init_app(app):
