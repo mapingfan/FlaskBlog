@@ -8,12 +8,14 @@ from flask_login import current_user
 from ..email import send_email
 from .forms import ChangerPasswordForm, ResetPasswordForm, BeforeResetPasswordForm, ChangeMailAddrForm, NewMailForm
 from flask import abort
-
+import hashlib
 
 @auth.before_app_request
 def before_request():
-    if current_user.is_authenticated and not current_user.confirmed and request.endpoint[:5] != 'auth.' and request.endpoint != 'static':
-        return redirect(url_for('auth.unconfirmed'))
+    if current_user.is_authenticated:
+        current_user.ping()
+        if not current_user.confirmed and request.endpoint[:5] != 'auth.':
+            return redirect(url_for('auth.unconfirmed'))
 
 
 @auth.route('/unconfirmed')
@@ -142,6 +144,7 @@ def change(token):
     if form.validate_on_submit():
         if confirm_token(token):
             current_user.email = form.email.data
+            current_user.avatar_hash = hashlib.md5(current_user.email.encode('utf-8')).hexdigest()
             db.session.add(current_user)
             db.session.commit()
             flash('You have successfully changed you email account, now you can log in using your new email account .')
