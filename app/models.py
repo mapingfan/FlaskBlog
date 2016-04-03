@@ -62,14 +62,15 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     avatar_hash = db.Column(db.String(32))
 
-    def gravatar(self):
+    def gravatar(self, size=100, default='identicon', rating='g'):
         if request.is_secure:
             url = 'http://en.gravatar.com/avatar/'
 
         else:
             url = 'http://en.gravatar.com/avatar/'
         hash = self.avatar_hash or hashlib.md5(self.email.encode('utf-8')).hexdigest()
-        return '{url}/{hash}'.format(url=url, hash=hash)
+        return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(
+            url=url, hash=hash, size=size, default=default, rating=rating)
 
     def ping(self):
         self.last_seen = datetime.utcnow()

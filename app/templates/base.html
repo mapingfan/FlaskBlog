@@ -40,6 +40,8 @@ Profile
     <li><a href="{{ url_for('auth.register') }}">Account Register</a> </li>
     <li><a href="{{ url_for('auth.change_password') }}">Change Password</a> </li>
     <li><a href="{{ url_for('auth.change_mail_addr') }}">Change Email</a></li>
+    <li><img class="img-rounded profile-thumbnail" src="{{ current_user.gravatar() }} "
+            style="height: 35px;margin-top: 8px;"></li>
 {% else %}
     <li><a href="{{ url_for('auth.login') }}">Sign In</a></li>
     <li><a href="{{ url_for('auth.register') }}">Account Register</a> </li>
