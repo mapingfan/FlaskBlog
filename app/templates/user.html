@@ -46,7 +46,7 @@ Profile
 </div>
 {% endblock %}
 {% block page_content %}
-<img class="img-rounded profile-thumbnail" src="{{ user.gravatar() }}">
+<img style="height: 35px;margin-top: 8px;" class="img-rounded profile-thumbnail" src="{{ user.gravatar() }}">
 <div class="page-header">
 <h1>{{ user.username }}</h1>
 {% if user.name or user.location %}

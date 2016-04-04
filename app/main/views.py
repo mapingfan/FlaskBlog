@@ -1,7 +1,7 @@
 from . import main
-from .forms import NameForm
+from .forms import NameForm, PostForm
 from .. import db
-from ..models import User, Role
+from ..models import User, Role, Post
 from app.decorators import admin_required, permission_required
 from app.models import Permission
 from datetime import datetime
@@ -13,22 +13,13 @@ from forms import EditProfileForm, EditProfileAdminForm
 
 @main.route('/', methods=['POST', 'GET'])
 def index():
-    form = NameForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=form.name.data).first()
-        if user is None:
-            user = User(username=form.name.data)
-            db.session.add(user)
-            session['known'] = False
-        else:
-            session['known'] = True
-        session['name'] = form.name.data
-        form.name.data = ""
-
+    form = PostForm()
+    if current_user.can(Permission.WRITE_ARTICLES) and form.validate_on_submit():
+        post = Post(body=form.body.data, author=current_user._get_current_object())
+        db.session.add(post)
         return redirect(url_for('main.index'))
-    return render_template('index.html', name=session.get('name'),
-                           known=session.get('known', False),
-                           current_time=datetime.utcnow(), form=form)
+    posts = Post.query.order_by(Post.timestamp.desc()).all()
+    return render_template('index.html', form=form, posts=posts)
 
 
 @main.route('/admin')

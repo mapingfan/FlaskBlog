@@ -8,6 +8,7 @@ from datetime import datetime
 import hashlib
 from flask import request
 
+
 class Permission:
     FOLLOW = 0X01
     COMMENT = 0X02
@@ -17,6 +18,14 @@ class Permission:
 
     def __init__(self):
         pass
+
+
+class Post(db.Model):
+    __tablename__ = 'posts'
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
 
 class Role(db.Model):
@@ -61,6 +70,7 @@ class User(UserMixin, db.Model):
     member_since = db.Column(db.DateTime, default=datetime.utcnow)
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     avatar_hash = db.Column(db.String(32))
+    posts = db.relationship('Post', backref='author', lazy='dynamic')
 
     def gravatar(self, size=100, default='identicon', rating='g'):
         if request.is_secure:
