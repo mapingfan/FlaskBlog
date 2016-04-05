@@ -7,13 +7,15 @@
 }
 ul.posts {
     list-style-type: none;
-    padding: 0px;
+    padding: 2px;
     margin: 16px 0px 0px 0px;
     border-top: 1px solid #e0e0e0;
 }
 ul.posts li.post {
     padding: 8px;
     border-bottom: 1px solid #e0e0e0;
+
+
 }
 ul.posts li.post:hover {
     background-color: #f0f0f0;
@@ -24,17 +26,22 @@ div.post-date {
 div.post-author {
     font-weight: bold;
     position:relative;
-    left:48px;
-    top:-1px;
+    left:60px;
+    top: 1px;
 }
 div.post-thumbnail {
     position: absolute;
 }
-div.post-content {
-    margin-left: 48px;
-    min-height: 48px;
+div.post-body {
+    /*margin-left: 48px;
+    min-height: 48px;*/
+    position:relative;
+    left: 60px;
+    top: 20px;
+    margin-right : 60px
 }
 div.post-footer {
+    position:relative;
     text-align: right;
 }
 div.pagination {

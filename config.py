@@ -9,6 +9,7 @@ class Config:
     FLASKY_MAIL_SUBJECTIVE_PREFIX = '[Flasky]'
     FLASKY_MAIL_SENDER = '805510335@qq.com'
     FLASKY_ADMIN = 'mapingfan@gmail.com'
+    FLASKY_POSTS_PER_PAGE = 5
 
     @staticmethod
     def init_app(app):
