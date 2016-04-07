@@ -33,6 +33,11 @@ src="{{ post.author.gravatar(size=48) }}">
     <span class="label label-danger">Edit [Admin]</span>
     </a>
         {% endif %}
+    <a href="{{ url_for('.post', id=post.id) }}#comments">
+        <span class="label label-primary">
+        {{ post.comments.count() }} Comments
+        </span>
+    </a>
 </div>
 </li>
 {% endfor %}
