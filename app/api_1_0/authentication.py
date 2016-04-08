@@ -1,6 +1,6 @@
 from flask_httpauth import HTTPBasicAuth
 from flask import g
-from ..models import AnonymousUser
+from ..models import AnonymousUser, User
 auth = HTTPBasicAuth()
 
 @auth.verify_password
