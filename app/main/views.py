@@ -9,6 +9,7 @@ from flask import render_template, session, redirect, url_for, flash, request, c
 from flask import abort
 from flask_login import login_required, current_user
 from forms import EditProfileForm, EditProfileAdminForm
+from flask_sqlalchemy import get_debug_queries
 
 
 @main.route('/', methods=['POST', 'GET'])
@@ -252,3 +253,13 @@ def edit_profile_admin(id):
     form.location.data = user.location
     form.about_me.data = user.about_me
     return render_template('edit_profile.html', form=form, user=user)
+
+
+@main.after_app_request
+def after_request(response):
+    for query in get_debug_queries():
+        if query.duration >= current_app.config['FLASKY_SLOW_DB_QUERY_TIME']:
+            current_app.logger.warning(
+                'Slow query: %s\nParameters: %s\nDuration: %fs\nContext: %s\n'
+                % (query.statement, query.parameters, query.duration, query.context))
+    return response
